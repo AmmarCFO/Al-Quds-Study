@@ -1,6 +1,8 @@
 
 import { Scenario, ScenarioType, MarketingVideo, Branch, ComparisonLink } from './types';
 
+export const FURNISHING_COST_PER_UNIT = 40000;
+
 export const SCENARIOS: Scenario[] = [
   {
     id: 'study_a',

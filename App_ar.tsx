@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { SCENARIOS } from './constants';
+import { SCENARIOS, FURNISHING_COST_PER_UNIT } from './constants';
 import { Scenario } from './types';
 import Header_ar from './components/Header_ar';
 import { Section } from './components/DashboardComponents';
@@ -168,6 +168,9 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
   
   // Net Income
   const effectiveNetIncome = effectiveRevenue - effectiveMabaat;
+
+  // Investment Logic
+  const totalFurnitureCost = activeScenario.unitCount * FURNISHING_COST_PER_UNIT;
   
   const translateScenarioName = (id: string) => {
       switch(id) {
@@ -227,7 +230,6 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
   ];
 
   const feeOptions = [
-      { value: 0.15, label: '١٥٪' },
       { value: 0.25, label: '٢٥٪' },
   ];
   
@@ -443,6 +445,36 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                                                     <span className="text-[9px] text-white/40 uppercase tracking-wider">{translateUnitLabel(activeScenario.id)}</span>
                                                 </div>
                                             </div>
+
+                                            {/* Pricing Breakdown */}
+                                            {unit.priceRange && (
+                                                <div className="grid grid-cols-3 gap-2 bg-white/5 rounded-lg p-2.5">
+                                                    <div className="text-center border-l border-white/10">
+                                                        <p className="text-[9px] text-white/40 uppercase tracking-widest mb-0.5">
+                                                            الأدنى {priceLabel}
+                                                        </p>
+                                                        <p className="text-xs font-bold text-white tabular-nums">
+                                                            {Math.round(unit.priceRange.min / priceDivisor).toLocaleString('ar-SA')}
+                                                        </p>
+                                                    </div>
+                                                    <div className="text-center border-l border-white/10">
+                                                        <p className="text-[9px] text-emerald-400/60 uppercase tracking-widest mb-0.5 font-bold">
+                                                            المتوسط {priceLabel}
+                                                        </p>
+                                                        <p className="text-sm font-black text-emerald-400 tabular-nums">
+                                                            {Math.round(unit.priceRange.avg / priceDivisor).toLocaleString('ar-SA')}
+                                                        </p>
+                                                    </div>
+                                                    <div className="text-center">
+                                                        <p className="text-[9px] text-white/40 uppercase tracking-widest mb-0.5">
+                                                            الأعلى {priceLabel}
+                                                        </p>
+                                                        <p className="text-xs font-bold text-white tabular-nums">
+                                                            {Math.round(unit.priceRange.max / priceDivisor).toLocaleString('ar-SA')}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                     ))}
                                 </div>
@@ -452,6 +484,37 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                         {/* LEFT COLUMN (Context) */}
                         <div className="lg:col-span-5 space-y-6">
                             
+                             {/* Investment Logic Card (Highlight for Study A) */}
+                             {!isStudyB && (
+                                 <motion.div 
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="relative bg-gradient-to-bl from-[#2A5B64]/30 to-[#2A5B64]/5 p-6 sm:p-8 rounded-2xl sm:rounded-[1.5rem] border border-[#2A5B64]/30 overflow-hidden"
+                                 >
+                                    <div className="absolute top-0 left-0 p-4 opacity-10">
+                                        <div className="w-32 h-32 bg-emerald-400 rounded-full blur-3xl"></div>
+                                    </div>
+
+                                    <h4 className="text-white font-bold text-lg mb-1 relative z-10">استثمار التأثيث</h4>
+                                    <p className="text-xs text-white/60 mb-6 relative z-10 uppercase tracking-wider font-cairo">متطلبات السكن التنفيذي</p>
+                                    
+                                    <div className="space-y-4 relative z-10">
+                                        <div className="flex justify-between items-center border-b border-white/10 pb-3">
+                                            <span className="text-sm text-white/70">تكلفة الاستوديو الواحد</span>
+                                            <div className="text-left">
+                                                <span className="block text-lg font-bold text-white tabular-nums">{formatCurrency(FURNISHING_COST_PER_UNIT)}</span>
+                                            </div>
+                                        </div>
+                                        <div className="flex justify-between items-center pt-2">
+                                            <span className="text-sm text-white/70">إجمالي الاستثمار <span className="text-[10px] text-white/40 block">(١٨ وحدة)</span></span>
+                                            <div className="text-left">
+                                                <span className="block text-2xl font-bold text-white tabular-nums">{formatCurrency(totalFurnitureCost)}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                 </motion.div>
+                             )}
+
                              <div className="bg-white/5 p-6 sm:p-8 rounded-2xl sm:rounded-[1.5rem] border border-white/10">
                                  <h4 className="text-white font-bold text-base sm:text-lg mb-2">سياق الدراسة</h4>
                                  <p className="text-sm text-white/60 leading-relaxed font-light mb-6">

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { SCENARIOS } from './constants';
+import { SCENARIOS, FURNISHING_COST_PER_UNIT } from './constants';
 import { Scenario, UnitMixItem } from './types';
 import Header from './components/Header';
 import { Section } from './components/DashboardComponents';
@@ -171,6 +171,9 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
   // Net Income
   const effectiveNetIncome = effectiveRevenue - effectiveMabaat;
   
+  // Investment Logic
+  const totalFurnitureCost = activeScenario.unitCount * FURNISHING_COST_PER_UNIT;
+
   const caseOptions = [
       { value: 'worst', label: 'Conservative' },
       { value: 'base', label: 'Realistic' },
@@ -197,7 +200,6 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
   ];
 
   const feeOptions = [
-      { value: 0.15, label: '15%' },
       { value: 0.25, label: '25%' },
   ];
 
@@ -463,9 +465,40 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                             </div>
                         </div>
 
-                        {/* RIGHT COLUMN: Context */}
+                        {/* RIGHT COLUMN: Context & Investment Logic */}
                         <div className="lg:col-span-5 space-y-6">
                             
+                             {/* Investment Logic Card (Highlight for Study A) */}
+                             {!isStudyB && (
+                                 <motion.div 
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="relative bg-gradient-to-br from-[#2A5B64]/30 to-[#2A5B64]/5 p-6 sm:p-8 rounded-2xl sm:rounded-[1.5rem] border border-[#2A5B64]/30 overflow-hidden"
+                                 >
+                                    <div className="absolute top-0 right-0 p-4 opacity-10">
+                                        <div className="w-32 h-32 bg-emerald-400 rounded-full blur-3xl"></div>
+                                    </div>
+
+                                    <h4 className="text-white font-bold text-lg mb-1 relative z-10">Furnishing Investment</h4>
+                                    <p className="text-xs text-white/60 mb-6 relative z-10 uppercase tracking-wider">Executive Living Requirements</p>
+                                    
+                                    <div className="space-y-4 relative z-10">
+                                        <div className="flex justify-between items-center border-b border-white/10 pb-3">
+                                            <span className="text-sm text-white/70">Cost Per Studio</span>
+                                            <div className="text-right">
+                                                <span className="block text-lg font-bold text-white tabular-nums">{formatCurrency(FURNISHING_COST_PER_UNIT)}</span>
+                                            </div>
+                                        </div>
+                                        <div className="flex justify-between items-center pt-2">
+                                            <span className="text-sm text-white/70">Total Investment <span className="text-[10px] text-white/40 block">(18 Units)</span></span>
+                                            <div className="text-right">
+                                                <span className="block text-2xl font-bold text-white tabular-nums">{formatCurrency(totalFurnitureCost)}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                 </motion.div>
+                             )}
+
                              {/* Strategy Text */}
                              <div className="bg-white/5 p-6 sm:p-8 rounded-2xl sm:rounded-[1.5rem] border border-white/10">
                                  <h4 className="text-white font-bold text-base sm:text-lg mb-2">Study Context</h4>
