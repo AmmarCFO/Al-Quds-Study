@@ -60,21 +60,21 @@ export const SCENARIOS: Scenario[] = [
     
     financials: {
         worst: {
-            revenue: 756000, // 42,000 * 18
+            revenue: 680400, // 37,800 * 18 (10% decrease)
             mabaatShare: 0,
-            netIncome: 756000, 
+            netIncome: 680400, 
             roi: 0
         },
         base: {
-            revenue: 810000, // 45,000 * 18
+            revenue: 680400, // Fixed
             mabaatShare: 0,
-            netIncome: 810000,
+            netIncome: 680400,
             roi: 0
         },
         best: {
-            revenue: 864000, // 48,000 * 18
+            revenue: 680400, // Fixed
             mabaatShare: 0,
-            netIncome: 864000,
+            netIncome: 680400,
             roi: 0
         }
     },
@@ -89,8 +89,8 @@ export const SCENARIOS: Scenario[] = [
         { 
             name: 'Studio (Corporate Rate)', 
             count: 18, 
-            avgPrice: 45000, 
-            priceRange: { min: 42000, avg: 45000, max: 48000 }, 
+            avgPrice: 37800, 
+            priceRange: { min: 37800, avg: 37800, max: 37800 }, 
         }
     ],
   }

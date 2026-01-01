@@ -149,7 +149,7 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
   const [scenarios, setScenarios] = useState<Scenario[]>(SCENARIOS);
   const [activeScenarioId, setActiveScenarioId] = useState<string>(SCENARIOS[0].id);
   const [activeCase, setActiveCase] = useState<CaseType>('base');
-  const [occupancyRate, setOccupancyRate] = useState<number>(1); // 1 = 100%
+  const [occupancyRate, setOccupancyRate] = useState<number>(0.9); // Default to 90%
   const [managementFee, setManagementFee] = useState<number>(0.25);
 
   const activeScenario = scenarios.find(s => s.id === activeScenarioId) || scenarios[0];
@@ -171,6 +171,40 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
 
   // Investment Logic
   const totalFurnitureCost = activeScenario.unitCount * FURNISHING_COST_PER_UNIT;
+  
+  // Depreciation based on user specified values
+  const depreciationPerUnitYearly = 13333;
+  const depreciationPerUnitMonthly = 1111;
+  
+  const depreciationYearly = depreciationPerUnitYearly * activeScenario.unitCount;
+  const depreciationMonthly = depreciationPerUnitMonthly * activeScenario.unitCount;
+
+  // Dynamic ROI Calculation based on *Current* Occupancy & Fee
+  const studyA = SCENARIOS.find(s => s.id === 'study_a')!;
+  const studyB = SCENARIOS.find(s => s.id === 'study_b')!;
+
+  const calculateDynamicROI = (caseType: 'worst' | 'base' | 'best') => {
+      // 1. Calculate Scenario A Net Income at CURRENT Occupancy & Fee
+      const revA = studyA.financials[caseType].revenue * occupancyRate;
+      const feeA = revA * managementFee;
+      const netA = revA - feeA;
+
+      // 2. Get Scenario B Net Income (Fixed Corporate Lease)
+      // Note: Corporate lease assumes 100% occupancy always.
+      const netB = studyB.financials[caseType].netIncome;
+
+      // 3. Uplift
+      const uplift = netA - netB;
+      
+      // 4. ROI
+      return (uplift / totalFurnitureCost) * 100;
+  };
+
+  const getROIColor = (roi: number) => {
+      if (roi >= 15) return 'text-emerald-400';
+      if (roi > 0) return 'text-yellow-400';
+      return 'text-red-400';
+  };
   
   const translateScenarioName = (id: string) => {
       switch(id) {
@@ -226,7 +260,6 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
           activeTextClassName: 'text-white'
       },
       { value: 0.9, label: '٩٠٪' },
-      { value: 1.0, label: '١٠٠٪' },
   ];
 
   const feeOptions = [
@@ -316,8 +349,15 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                             </div>
                          </div>
 
-                        {/* Sensitivity Selector */}
-                        <div className="w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0 hide-scrollbar">
+                        {/* Sensitivity Selector - Hidden for Study B since fixed */}
+                        <AnimatePresence>
+                        {!isStudyB && (
+                        <motion.div 
+                            initial={{ opacity: 0, width: 0 }}
+                            animate={{ opacity: 1, width: 'auto' }}
+                            exit={{ opacity: 0, width: 0 }}
+                            className="w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0 hide-scrollbar"
+                        >
                             <div className="min-w-max">
                                 <SegmentedControl 
                                     name="cockpit-case"
@@ -327,7 +367,9 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                                     options={caseOptions}
                                 />
                             </div>
-                        </div>
+                        </motion.div>
+                        )}
+                        </AnimatePresence>
                      </div>
 
                     {/* Simulation Controls - Row */}
@@ -505,11 +547,53 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                                                 <span className="block text-lg font-bold text-white tabular-nums">{formatCurrency(FURNISHING_COST_PER_UNIT)}</span>
                                             </div>
                                         </div>
-                                        <div className="flex justify-between items-center pt-2">
-                                            <span className="text-sm text-white/70">إجمالي الاستثمار <span className="text-[10px] text-white/40 block">(١٨ وحدة)</span></span>
-                                            <div className="text-left">
-                                                <span className="block text-2xl font-bold text-white tabular-nums">{formatCurrency(totalFurnitureCost)}</span>
+
+                                        {/* Depreciation Section */}
+                                        <div className="py-4 border-b border-white/10">
+                                            <p className="text-xs font-bold text-white/40 uppercase tracking-widest mb-3 font-cairo">تفاصيل الإهلاك</p>
+                                            <div className="grid grid-cols-3 gap-2 text-center">
+                                                <div className="bg-white/5 rounded-lg p-2 border border-white/5 flex flex-col justify-center">
+                                                    <div className="text-[9px] text-white/50 uppercase tracking-wider mb-1 font-cairo">الإجمالي (٣ سنوات)</div>
+                                                    <div className="text-[10px] sm:text-sm font-bold text-white">{formatCurrency(totalFurnitureCost)}</div>
+                                                </div>
+                                                <div className="bg-white/5 rounded-lg p-2 border border-white/5 flex flex-col justify-center">
+                                                    <div className="text-[9px] text-white/50 uppercase tracking-wider mb-1 font-cairo">سنوي</div>
+                                                    <div className="text-[10px] sm:text-sm font-bold text-white">{formatCurrency(depreciationYearly)}</div>
+                                                </div>
+                                                <div className="bg-white/5 rounded-lg p-2 border border-white/5 flex flex-col justify-center">
+                                                    <div className="text-[9px] text-white/50 uppercase tracking-wider mb-1 font-cairo">شهري</div>
+                                                    <div className="text-[10px] sm:text-sm font-bold text-white">{formatCurrency(depreciationMonthly)}</div>
+                                                </div>
                                             </div>
+                                        </div>
+
+                                        {/* ROI Section */}
+                                        <div className="pt-2">
+                                            <div className="flex justify-between items-end mb-3">
+                                                <p className="text-xs font-bold text-white/40 uppercase tracking-widest font-cairo">العائد المتوقع على الاستثمار (مقارنة بغير المفروش)</p>
+                                                <p className="text-[10px] text-emerald-400 font-bold bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20 font-cairo">الهدف: ١٥٪</p>
+                                            </div>
+                                            <div className="space-y-2">
+                                                {['worst', 'base', 'best'].map((c) => {
+                                                    const roi = calculateDynamicROI(c as CaseType);
+                                                    const isSelected = activeCase === c;
+                                                    
+                                                    const labels: Record<string, string> = { 'worst': 'متحفظ', 'base': 'واقعي', 'best': 'متفائل' };
+                                                    
+                                                    return (
+                                                        <div key={c} className={`flex justify-between items-center rounded-lg p-2 px-3 transition-colors ${isSelected ? 'bg-white/10 border border-white/10' : 'bg-white/5 hover:bg-white/10'}`}>
+                                                            <div className="flex items-center gap-2">
+                                                                {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_5px_rgba(52,211,153,0.8)]"></div>}
+                                                                <span className={`text-xs font-cairo ${isSelected ? 'text-white font-bold' : 'text-white/70 font-medium'}`}>{labels[c]}</span>
+                                                            </div>
+                                                            <span className={`text-sm font-bold ${getROIColor(roi)}`}>{roi.toFixed(1)}٪</span>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                            <p className="text-[9px] text-white/30 mt-2 text-left italic font-cairo">
+                                                * العائد بناءً على نسبة إشغال {Math.round(effectiveOccupancy * 100)}٪ ورسوم إدارة {(managementFee * 100)}٪
+                                            </p>
                                         </div>
                                     </div>
                                  </motion.div>
