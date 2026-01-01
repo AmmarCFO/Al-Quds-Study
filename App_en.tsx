@@ -151,7 +151,7 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
   const [scenarios, setScenarios] = useState<Scenario[]>(SCENARIOS);
   const [activeScenarioId, setActiveScenarioId] = useState<string>(SCENARIOS[0].id);
   const [activeCase, setActiveCase] = useState<CaseType>('base');
-  const [occupancyRate, setOccupancyRate] = useState<number>(0.9); // Default to 90%
+  const [occupancyRate, setOccupancyRate] = useState<number>(0.8); // Default to 80%
   const [managementFee, setManagementFee] = useState<number>(0.25);
   
   const activeScenario = scenarios.find(s => s.id === activeScenarioId) || scenarios[0];
@@ -558,23 +558,20 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                                                 <p className="text-[10px] text-emerald-400 font-bold bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">Target: 15%</p>
                                             </div>
                                             <div className="space-y-2">
-                                                {['worst', 'base', 'best'].map((c) => {
-                                                    const roi = calculateDynamicROI(c as CaseType);
-                                                    const isSelected = activeCase === c;
-                                                    
-                                                    // Map keys to labels
+                                                {(() => {
+                                                    const roi = calculateDynamicROI(activeCase);
                                                     const labels: Record<string, string> = { 'worst': 'Conservative', 'base': 'Realistic', 'best': 'Optimistic' };
                                                     
                                                     return (
-                                                        <div key={c} className={`flex justify-between items-center rounded-lg p-2 px-3 transition-colors ${isSelected ? 'bg-white/10 border border-white/10' : 'bg-white/5 hover:bg-white/10'}`}>
+                                                        <div className="bg-white/10 border border-white/10 flex justify-between items-center rounded-lg p-3 transition-colors">
                                                             <div className="flex items-center gap-2">
-                                                                {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_5px_rgba(52,211,153,0.8)]"></div>}
-                                                                <span className={`text-xs ${isSelected ? 'text-white font-bold' : 'text-white/70 font-medium'}`}>{labels[c]}</span>
+                                                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_5px_rgba(52,211,153,0.8)]"></div>
+                                                                <span className="text-sm text-white font-bold">{labels[activeCase]} Scenario</span>
                                                             </div>
-                                                            <span className={`text-sm font-bold ${getROIColor(roi)}`}>{roi.toFixed(1)}%</span>
+                                                            <span className={`text-lg font-bold ${getROIColor(roi)}`}>{roi.toFixed(1)}%</span>
                                                         </div>
                                                     );
-                                                })}
+                                                })()}
                                             </div>
                                             <p className="text-[9px] text-white/30 mt-2 text-right italic">
                                                 * ROI based on Net Income vs Corporate Lease (incl. {Math.round(managementFee * 100)}% mgmt fee)
