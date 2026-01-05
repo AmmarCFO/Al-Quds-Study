@@ -9,39 +9,39 @@ export const SCENARIOS: Scenario[] = [
     type: ScenarioType.LONG_TERM,
     name: 'Study A: Executive Living',
     color: '#2A5B64', // Teal
-    description: 'Furnished apartments (Executive Living) model for 18 Hotel Grade Studio Apartments. Standard management fee applies with flexible contract durations.',
+    description: 'Furnished apartments (Executive Living) model for 16 Hotel Grade Studio Apartments. Standard management fee applies with flexible contract durations.',
     
     financials: {
         worst: {
-            revenue: 1167696, // 5,406 * 12 * 18
-            mabaatShare: 291924, // 25%
-            netIncome: 875772, 
+            revenue: 1037952, // 5,406 * 12 * 16
+            mabaatShare: 259488, // 25%
+            netIncome: 778464, 
             roi: 0
         },
         base: {
-            revenue: 1306800, // 6,050 * 12 * 18
-            mabaatShare: 326700, // 25%
-            netIncome: 980100, 
+            revenue: 1161600, // 6,050 * 12 * 16
+            mabaatShare: 290400, // 25%
+            netIncome: 871200, 
             roi: 0
         },
         best: {
-            revenue: 1445904, // 6,694 * 12 * 18
-            mabaatShare: 361476, // 25%
-            netIncome: 1084428, 
+            revenue: 1285248, // 6,694 * 12 * 16
+            mabaatShare: 321312, // 25%
+            netIncome: 963936, 
             roi: 0
         }
     },
 
     propertyValue: 0, 
     
-    unitCount: 18,
+    unitCount: 16,
     unitLabel: 'Studios',
     occupancyDurationLabel: 'Flexible Contracts',
     
     unitMix: [
         { 
             name: 'Hotel Grade Studio', 
-            count: 18, 
+            count: 16, 
             avgPrice: 72600, // 6,050 * 12
             priceRange: { 
                 min: 64872, // 5,406 * 12
@@ -56,39 +56,39 @@ export const SCENARIOS: Scenario[] = [
     type: ScenarioType.LONG_TERM,
     name: 'Study B: Corporate Lease',
     color: '#8A6E99', // Purple
-    description: 'Entire building rented to a single corporate tenant (18 Studios). No vacancy risk (100% occupancy assumed) and no management fee applied.',
+    description: 'Entire building rented to a single corporate tenant (16 Studios). No vacancy risk (100% occupancy assumed) and no management fee applied.',
     
     financials: {
         worst: {
-            revenue: 680400, // 37,800 * 18 (10% decrease)
+            revenue: 604800, // 37,800 * 16 (10% decrease)
             mabaatShare: 0,
-            netIncome: 680400, 
+            netIncome: 604800, 
             roi: 0
         },
         base: {
-            revenue: 680400, // Fixed
+            revenue: 604800, // Fixed
             mabaatShare: 0,
-            netIncome: 680400,
+            netIncome: 604800,
             roi: 0
         },
         best: {
-            revenue: 680400, // Fixed
+            revenue: 604800, // Fixed
             mabaatShare: 0,
-            netIncome: 680400,
+            netIncome: 604800,
             roi: 0
         }
     },
 
     propertyValue: 0, 
     
-    unitCount: 18, 
+    unitCount: 16, 
     unitLabel: 'Studios',
     occupancyDurationLabel: 'Single Contract',
     
     unitMix: [
         { 
             name: 'Studio (Corporate Rate)', 
-            count: 18, 
+            count: 16, 
             avgPrice: 37800, 
             priceRange: { min: 37800, avg: 37800, max: 37800 }, 
         }

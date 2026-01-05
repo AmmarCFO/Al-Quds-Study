@@ -272,7 +272,7 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
               Al Quds<span className="text-[#8A6E99]">.</span>
             </h1>
             <p className="text-sm sm:text-xl text-gray-500 max-w-2xl mx-auto font-medium leading-relaxed tracking-tight px-4 mb-8">
-                Feasibility study for <span className="text-[#2A5B64]">18 Hotel Grade Studio Apartments</span> comparing Executive Living model vs Corporate Lease.
+                Feasibility study for <span className="text-[#2A5B64]">16 Hotel Grade Studio Apartments</span> comparing Executive Living model vs Corporate Lease.
             </p>
 
             {/* Comparison Set Buttons */}

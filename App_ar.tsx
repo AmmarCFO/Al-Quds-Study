@@ -216,8 +216,8 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
 
   const translateScenarioDesc = (id: string) => {
     switch(id) {
-        case 'study_a': return 'نموذج الشقق المفروشة (سكن تنفيذي) لـ ١٨ استوديو فندقي. تطبق رسوم الإدارة القياسية مع عقود مرنة.';
-        case 'study_b': return 'تأجير المبنى بالكامل لمستأجر واحد (١٨ استوديو). لا توجد مخاطر شغور (إشغال ١٠٠٪) ولا تطبق رسوم إدارة.';
+        case 'study_a': return 'نموذج الشقق المفروشة (سكن تنفيذي) لـ ١٦ استوديو فندقي. تطبق رسوم الإدارة القياسية مع عقود مرنة.';
+        case 'study_b': return 'تأجير المبنى بالكامل لمستأجر واحد (١٦ استوديو). لا توجد مخاطر شغور (إشغال ١٠٠٪) ولا تطبق رسوم إدارة.';
         default: return '';
     }
   };
@@ -295,7 +295,7 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
               القدس<span className="text-[#4A2C5A]">.</span>
             </h1>
             <p className="text-sm sm:text-2xl text-gray-500 max-w-3xl mx-auto font-medium leading-relaxed tracking-tight px-4 mb-8">
-                دراسة جدوى لمشروع <span className="text-[#2A5B64]">١٨ استوديو فندقي</span> تقارن بين نموذج السكن التنفيذي وتأجير الشركات.
+                دراسة جدوى لمشروع <span className="text-[#2A5B64]">١٦ استوديو فندقي</span> تقارن بين نموذج السكن التنفيذي وتأجير الشركات.
             </p>
 
             {/* Comparison Buttons */}
